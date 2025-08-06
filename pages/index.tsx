@@ -14,6 +14,7 @@ const Clients = dynamic(() => import('sections/Clients'), { ssr: false });
 const NewsLetter = dynamic(() => import('sections/NewsLetter'), { ssr: false });
 const Contact = dynamic(() => import('sections/ContactSection'), { ssr: false });
 const Footer = dynamic(() => import('sections/Footer'), { ssr: false });
+const LegalInfoSection = dynamic(() => import('sections/LegalInfoSection'), { ssr: false });
 
 export const getStaticProps = async ({ locale }) => ({
   props: {
@@ -46,6 +47,7 @@ const Home: NextPage = () => {
         <Header />
       </div>
       <Hero />
+      <LegalInfoSection />
       <Category />
       <TopDestinations />
       <EasyinFast />
