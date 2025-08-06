@@ -131,5 +131,11 @@
   "internal_tourism_title": "Ichki turizm",
   "internal_tourism_subtitle": "Oʻzbekiston boʻylab maroqli sayohatlar va xizmatlar.",
   "internal_tourism_body": "Oasis Tour ichki turizm boʻyicha zamonaviy, qulay va xavfsiz sayohatlarni tashkil etadi. Biz mahalliy yoʻnalishlarda eksklyuziv sayohatlar, taʼlimiy va madaniy turlar, oilaviy va korporativ dam olish, ekskursiyalar hamda tabiat qoʻynidagi dam olish imkoniyatlarini taklif etamiz. Bizning tajribali gidlar va menejerlar jamoasi yoʻllanmalar, transport, turar joy va koʻngilochar dasturlarni toʻliq tashkil etib, sizga yoqimli xotiralar taqdim etadi.",
-  "internal_tourism_cta": "Ichki turlarga buyurtma berish"
+  "internal_tourism_cta": "Ichki turlarga buyurtma berish",
+
+  "external_tourism_title": "Tashqi turizm",
+  "external_tourism_subtitle": "Dunyo boʻylab orzu qilingan sayohatlar va xizmatlar.",
+  "external_tourism_body": "Oasis Tour sizga har tomonlama qulay va xavfsiz xalqaro sayohatlarni taqdim etadi. Biz vizali va vizasiz davlatlarga turlar, mashhur shaharlar va mamlakatlarga sayohatlar, oilaviy, yoshlar va korporativ turlar, hamda dunyo boʻylab eksklyuziv yoʻnalishlarni taklif qilamiz. Barcha safarlar uchun avia va mehmonxona bron qilish, sugʻurta, gid xizmatlari va doimiy qoʻllab-quvvatlashni taʼminlaymiz. Dunyo sizni kutmoqda — biz bilan orzuingizni roʻyobga chiqaring!",
+  "external_tourism_cta": "Tashqi turlarga buyurtma berish",
+  "external_tourism_img_alt": "Xalqaro sayohat"
 }
