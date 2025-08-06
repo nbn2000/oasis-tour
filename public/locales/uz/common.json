@@ -58,7 +58,6 @@
   "easy_card_by": "Robbin Joseph tomonidan",
   "easy_metric_participants": "24 kishi qatnashmoqda",
 
-  "footer_company_slogan": "Sayohatingizni bir daqiqada bron qiling, ko‘proq muddat davomida to‘liq nazorat oling.",
   "footer_company": "Kompaniya",
   "footer_about": "Biz haqimizda",
   "footer_careers": "Ish imkoniyatlari",
@@ -72,7 +71,6 @@
   "footer_airlines": "Aviakompaniyalar",
   "footer_cheap_tickets": "Arzon chiptalar bo'yicha maslahatlar",
   "footer_discover_app": "Ilovamizni kashf eting",
-  "footer_rights": "Barcha huquqlar Oasis Tour",
 
   "newsletter_subtitle": "Oasis Tour haqida ma'lumot, so'nggi yangiliklar va boshqa qiziqarli takliflarni olish uchun obuna bo'ling",
   "newsletter_email_placeholder": "Elektron pochtangiz",
@@ -123,5 +121,9 @@
   "contact_button": "Aloqa",
   "contact_required": "Bu maydon to‘ldirilishi shart",
   "contact_thanks": "Rahmat! Tez orada siz bilan bog‘lanamiz.",
-  "contact_close": "Yopish"
+  "contact_close": "Yopish",
+
+  "footer_rights": "Barcha huquqlar himoyalangan © Oasis Tour",
+  "footer_company_slogan": "Sayohatingizni bir daqiqada bron qiling, ko‘proq muddat davomida to‘liq nazorat oling.",
+  "footer_legal_info": "BILDERBERG GROUP MCHJ · INN 207128897 · Turon bank MFO 00446 · R/S 20208000704937282001"
 }

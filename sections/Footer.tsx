@@ -132,6 +132,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="pt-8 text-center text-sm text-gray-500">{t('footer_rights')}</div>
+        <div className="mt-1 select-text text-center text-xs tracking-wide text-gray-400">{t('footer_legal_info')}</div>
       </div>
     </footer>
   );
