@@ -11,18 +11,20 @@ const clients = [
 
 const Clients = () => {
   return (
-    <section className="mb-28">
+    <section className="mb-28" id="client">
       <div className="relative mx-auto max-w-full lg:max-w-7xl">
         <div className="grid grid-cols-1 gap-y-4 lg:grid-cols-5 lg:gap-y-0 lg:gap-x-4">
           {clients.map((item, idx) => (
             <div
               key={idx}
-              className="relative h-20 transform rounded-2xl bg-white p-4 grayscale transition-all duration-300 hover:-translate-y-1 hover:shadow-great hover:grayscale-0"
+              className="relative h-20 transform rounded-2xl p-4 grayscale transition-all duration-300 hover:-translate-y-1 hover:shadow-great hover:grayscale-0"
             >
               <Image
                 src={`/images/${item.image}`}
+                width={'100%'}
+                height={'100%'}
+                className="object-contain object-center"
                 alt={item.alt}
-                className=" object-contain lg:object-none"
                 layout="fill"
               />
             </div>

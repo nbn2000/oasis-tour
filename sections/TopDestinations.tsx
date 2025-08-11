@@ -7,7 +7,7 @@ const TopDestinations = () => {
   const { t } = useTranslation('common');
 
   return (
-    <section className="mb-28">
+    <section className="mb-28" id="top">
       <div className="relative mx-auto max-w-7xl px-4">
         <div className="mb-16 flex flex-col text-center">
           <h3 className="mb-2 text-lg uppercase text-gray-500">{t('topdest_popular')}</h3>

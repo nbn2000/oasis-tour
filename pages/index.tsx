@@ -11,7 +11,7 @@ const TopDestinations = dynamic(() => import('sections/TopDestinations'), { ssr:
 const EasyinFast = dynamic(() => import('sections/EasyinFast'), { ssr: false });
 const Testimonials = dynamic(() => import('components/Testimonials'), { ssr: false });
 const Clients = dynamic(() => import('sections/Clients'), { ssr: false });
-const NewsLetter = dynamic(() => import('sections/NewsLetter'), { ssr: false });
+// const NewsLetter = dynamic(() => import('sections/NewsLetter'), { ssr: false });
 const Contact = dynamic(() => import('sections/ContactSection'), { ssr: false });
 const Footer = dynamic(() => import('sections/Footer'), { ssr: false });
 const LegalInfoSection = dynamic(() => import('sections/LegalInfoSection'), { ssr: false });
@@ -58,7 +58,7 @@ const Home: NextPage = () => {
       <Testimonials />
       <Contact />
       <Clients />
-      <NewsLetter />
+      {/* <NewsLetter /> */}
       <Footer />
     </div>
   );

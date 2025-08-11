@@ -7,7 +7,7 @@ const Category = () => {
   const { t } = useTranslation('common');
 
   return (
-    <section className="mb-32">
+    <section className="mb-32" id="category">
       <div className="relative mx-auto max-w-7xl px-4">
         <div className="absolute -top-10 h-36 w-36 lg:-right-10">
           <DecorPlus1 className="decor-plus-style-1" />

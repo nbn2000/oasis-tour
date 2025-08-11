@@ -56,7 +56,7 @@ export default function Testimonials() {
   }, [activeSlide]);
 
   return (
-    <div className="mb-28">
+    <section className="mb-28" id="testimonials">
       <div className="relative mx-auto max-w-full px-4 lg:max-w-7xl">
         <div className="flex flex-wrap">
           <div className="w-full px-0 lg:w-5/12 lg:pl-8 lg:pr-20">
@@ -150,6 +150,6 @@ export default function Testimonials() {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

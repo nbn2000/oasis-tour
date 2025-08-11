@@ -6,7 +6,7 @@ const EasyinFast = () => {
   const { t } = useTranslation('common');
 
   return (
-    <div className="mb-28">
+    <div className="mb-28" id="easy">
       <div className="relative mx-auto max-w-7xl overflow-hidden px-4">
         <div className="flex flex-wrap space-x-4 space-y-4 lg:space-y-0 lg:space-x-0">
           <div className="w-full pl-0 lg:w-6/12 lg:pl-6">

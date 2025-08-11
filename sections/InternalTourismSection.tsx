@@ -12,7 +12,7 @@ const InternalTourismSection = () => {
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
   return (
-    <section className="relative my-28 px-4 lg:px-0" id="internal-tourism">
+    <section className="relative my-28 px-4 lg:px-0" id="internal">
       <div className="absolute -top-10 left-0 z-0 h-32 w-32 opacity-30">
         <DecorPlus1 className="decor-plus-style-1" />
       </div>
