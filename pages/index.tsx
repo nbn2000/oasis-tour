@@ -7,7 +7,7 @@ import dynamic from 'next/dynamic';
 const Header = dynamic(() => import('components/Header'), { ssr: false });
 const Hero = dynamic(() => import('sections/Hero'), { ssr: false });
 const Category = dynamic(() => import('sections/Category'), { ssr: false });
-const TopDestinations = dynamic(() => import('sections/TopDestinations'), { ssr: false });
+// const TopDestinations = dynamic(() => import('sections/TopDestinations'), { ssr: false });
 const EasyinFast = dynamic(() => import('sections/EasyinFast'), { ssr: false });
 const Testimonials = dynamic(() => import('components/Testimonials'), { ssr: false });
 const Clients = dynamic(() => import('sections/Clients'), { ssr: false });
@@ -17,6 +17,7 @@ const Footer = dynamic(() => import('sections/Footer'), { ssr: false });
 const LegalInfoSection = dynamic(() => import('sections/LegalInfoSection'), { ssr: false });
 const InternalTourismSection = dynamic(() => import('sections/InternalTourismSection'), { ssr: false });
 const ExternalTourismSection = dynamic(() => import('sections/ExternalTourismSection'), { ssr: false });
+const PackagesGrid = dynamic(() => import('sections/PackagesGrid'), { ssr: false });
 
 export const getStaticProps = async ({ locale }) => ({
   props: {
@@ -53,7 +54,8 @@ const Home: NextPage = () => {
       <InternalTourismSection />
       <ExternalTourismSection />
       <Category />
-      <TopDestinations />
+      {/* <TopDestinations /> */}
+      <PackagesGrid />
       <EasyinFast />
       <Testimonials />
       <Contact />

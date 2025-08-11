@@ -3,6 +3,7 @@ import LanguageSwitcher from 'components/LanguageSwitcher';
 import ContactModal from './ContactModal';
 import Logo from 'assets/images/logo.svg';
 import { useTranslation } from 'react-i18next';
+import Link from 'next/link';
 
 export default function Header() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -14,9 +15,11 @@ export default function Header() {
   return (
     <header className="mx-auto mb-6 max-w-full px-4 lg:max-w-7xl">
       <div className="flex w-full items-center justify-between ">
-        <div className="w-28">
-          <Logo className="logo-style-1" />
-        </div>
+        <Link href={'/'}>
+          <div className="w-28 cursor-pointer">
+            <Logo className="logo-style-1" />
+          </div>
+        </Link>
         <div className="flex items-center gap-4">
           <LanguageSwitcher />
           <button

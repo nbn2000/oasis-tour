@@ -143,5 +143,18 @@
   "nav_easy": "Tez va oson",
   "nav_testimonials": "Mijozlar fikri",
   "nav_clients": "Hamkorlarimiz",
-  "nav_contact": "Bog‘lanish"
+  "nav_contact": "Bog‘lanish",
+
+  "name": "name_uz",
+  "text": "text_uz",
+  "packages": "Paketlar",
+  "packages_subtitle": "Siz uchun tanlab olingan takliflar",
+  "see_all_packages": "Barcha paketlarni ko‘rish",
+  "see_details": "Batafsil ko‘rish",
+  "loading": "Yuklanmoqda...",
+  "package_not_found": "Paket topilmadi.",
+  "back_to_packages": "Barcha paketlar",
+  "created_at": "Yaratilgan",
+  "open_media": "Mediya faylini ochish",
+  "close": "Yopish"
 }
