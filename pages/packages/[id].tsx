@@ -1,8 +1,6 @@
 'use client';
 import React, { useEffect, useMemo, useState } from 'react';
-import Head from 'next/head';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Keyboard } from 'swiper';
 import 'swiper/css';
@@ -16,20 +14,20 @@ import VideoThumb from '../../components/VideoThumb';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import dynamic from 'next/dynamic';
+import { NextSeo, BreadcrumbJsonLd, ProductJsonLd } from 'next-seo';
 
 const Header = dynamic(() => import('components/Header'), { ssr: false });
 const Footer = dynamic(() => import('sections/Footer'), { ssr: false });
+
 export async function getStaticPaths() {
-  const packages = await listPackages(); // Must work in Node (not browser)
+  const packages = await listPackages();
   return {
-    paths: packages.map((pkg) => ({
-      params: { id: String(pkg.id) },
-    })),
-    fallback: 'blocking', // or true if you want incremental generation
+    paths: packages.map((pkg) => ({ params: { id: String(pkg.id) } })),
+    fallback: 'blocking',
   };
 }
 
-export async function getStaticProps({ params, locale }) {
+export async function getStaticProps({ params, locale }: { params: any; locale: string }) {
   const packages = await listPackages();
   const pkg = packages.find((p) => String(p.id) === String(params.id)) || null;
 
@@ -38,7 +36,7 @@ export async function getStaticProps({ params, locale }) {
       pkg,
       ...(await serverSideTranslations(locale, ['common'])),
     },
-    revalidate: 60, // ISR: refresh data every minute
+    revalidate: 60,
   };
 }
 
@@ -60,76 +58,70 @@ const toSafeHtml = (rawText: string): string => {
 
 export const toDate = (v: any): Date | null => {
   if (!v) return null;
-  if (typeof v?.toDate === 'function') return v.toDate(); // Firestore Timestamp
+  if (typeof v?.toDate === 'function') return v.toDate();
   if (typeof v === 'number') {
-    // seconds vs ms
     const ms = v < 1e12 ? v * 1000 : v;
     const d = new Date(ms);
     return isNaN(d.getTime()) ? null : d;
   }
-  const d = new Date(v); // string / Date
+  const d = new Date(v);
   return isNaN(d.getTime()) ? null : d;
 };
 
 export const formatDate = (v: any, locale = 'uz-UZ'): string => {
   const d = toDate(v);
   if (!d) return '—';
-  return new Intl.DateTimeFormat(locale, {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  }).format(d);
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(d);
 };
 
-const PackageDetailPage: React.FC = () => {
-  const { t } = useTranslation('common');
-  const router = useRouter();
-  const { id } = router.query;
-
-  const [pkg, setPkg] = useState<TravelPackage | null>(null);
-  const [loading, setLoading] = useState(true);
+const PackageDetailPage: React.FC<{ pkg: TravelPackage | null }> = ({ pkg }) => {
+  const { t, i18n } = useTranslation('common');
 
   const [openModal, setOpenModal] = useState(false);
   const [modalIndex, setModalIndex] = useState(0);
 
-  useEffect(() => {
-    if (!id) return;
-    (async () => {
-      const all = await listPackages();
-      const found = all.find((p) => String(p.id) === String(id)) || null;
-      setPkg(found);
-      setLoading(false);
-    })();
-  }, [id]);
+  const localizedTitle = (
+    (pkg?.[t('name') as keyof TravelPackage] as string) ||
+    (pkg ? (pkg as any)[t('name')] : '') ||
+    ''
+  ).trim();
 
-  const html = useMemo(() => toSafeHtml((pkg?.[t('text') as keyof TravelPackage] as string) || ''), [pkg, t]);
-
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center py-16">
-        <div className="w-full max-w-4xl animate-pulse space-y-6">
-          <div className="h-8 w-1/2 rounded bg-gray-200"></div>
-          <div className="h-4 w-1/3 rounded bg-gray-200"></div>
-          <div className="aspect-[16/9] w-full rounded-3xl bg-gray-200"></div>
-          <div className="h-20 w-full rounded bg-gray-200"></div>
-        </div>
-      </div>
-    );
-  }
+  const html = useMemo(
+    () =>
+      toSafeHtml(
+        (
+          ((pkg?.[t('text') as keyof TravelPackage] as string) || (pkg ? (pkg as any)[t('text')] : '') || '') as string
+        ).trim(),
+      ),
+    [pkg, t],
+  );
 
   if (!pkg) {
     return (
-      <div className="py-16 text-center">
-        <p className="mb-4 text-gray-500">{t('package_not_found')}</p>
-        <Link href="/packages">
-          <div className="rounded-xl border px-4 py-2 text-sm hover:bg-gray-50">{t('back_to_packages')}</div>
-        </Link>
-      </div>
+      <>
+        <div className="w-full py-6 lg:py-12">
+          <Header />
+        </div>
+        <div className="py-16 text-center">
+          <p className="mb-4 text-gray-500">{t('package_not_found')}</p>
+          <Link
+            href="/packages"
+            className="inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-sm hover:bg-gray-50"
+          >
+            {t('back_to_packages')}
+          </Link>
+        </div>
+        <Footer isNotHome />
+      </>
     );
   }
 
   const media = pkg.media || [];
   const priceStr = `$${Number(pkg.price || 0).toLocaleString()}`;
-  const title = pkg[t('name') as keyof TravelPackage] as string;
+  const baseUrl = 'https://oasis-tour.uz';
+  const canonical = `${baseUrl}/packages/${pkg.id}`;
+  const images = media.filter((m) => m.type === 'photo').map((m) => m.url);
+  const firstImg = images[0];
 
   const onOpenModal = (index: number) => {
     setModalIndex(index);
@@ -141,24 +133,86 @@ const PackageDetailPage: React.FC = () => {
     document.documentElement.style.overflow = '';
   };
 
+  // Extra JSON-LD (TouristTrip) — complements ProductJsonLd
+  const tripJsonLd = useMemo(() => {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'TouristTrip',
+      name: localizedTitle || String(pkg.id),
+      description: localizedTitle || String(pkg.id),
+      inLanguage: i18n.language,
+      image: images.length ? images : undefined,
+      url: canonical,
+      provider: {
+        '@type': 'Organization',
+        name: 'Oasis Tour',
+        url: baseUrl,
+      },
+      offers:
+        typeof pkg.price === 'number'
+          ? {
+              '@type': 'Offer',
+              price: String(pkg.price),
+              priceCurrency: 'USD',
+              url: canonical,
+              availability: 'https://schema.org/InStock',
+            }
+          : undefined,
+      // You can extend with itinerary, departureStation/arrivalStation, etc., if you store those.
+    };
+  }, [localizedTitle, i18n.language, images, canonical, pkg.price]);
+
   return (
     <>
-      <Head>
-        <title>{title} — Oasis Tour</title>
-        <meta name="description" content={title} />
-      </Head>
-      <div className="w-full py-6 lg:z-10 lg:py-12">
+      <NextSeo
+        title={`${localizedTitle} — Oasis Tour`}
+        description={localizedTitle}
+        canonical={canonical}
+        openGraph={{
+          url: canonical,
+          title: `${localizedTitle} — Oasis Tour`,
+          description: localizedTitle,
+          images: firstImg ? [{ url: firstImg, width: 1200, height: 630, alt: localizedTitle }] : undefined,
+        }}
+      />
+      <BreadcrumbJsonLd
+        itemListElements={[
+          { position: 1, name: 'Home', item: `${baseUrl}/` },
+          { position: 2, name: 'Packages', item: `${baseUrl}/packages` },
+          { position: 3, name: localizedTitle, item: canonical },
+        ]}
+      />
+      <ProductJsonLd
+        productName={localizedTitle}
+        images={images.length ? images : undefined}
+        description={localizedTitle}
+        brand="Oasis Tour"
+        sku={String(pkg.id)}
+        offers={[
+          {
+            price: String(pkg.price || 0),
+            priceCurrency: 'USD',
+            url: canonical,
+            availability: 'https://schema.org/InStock',
+          },
+        ]}
+      />
+      {/* TouristTrip JSON-LD */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(tripJsonLd) }} />
+
+      <div className="w-full py-6 lg:py-12">
         <Header />
       </div>
+
       <section className="mb-28">
         <div className="mx-auto max-w-5xl px-4">
           {/* Header */}
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h1 className="font-serif text-3xl font-bold text-gray-900 md:text-4xl">{title}</h1>
+              <h1 className="font-serif text-3xl font-bold text-gray-900 md:text-4xl">{localizedTitle}</h1>
               <div className="mt-2 text-sm text-gray-500">
                 ID: <span className="font-medium">{pkg.id}</span> · {t('created_at')}:{' '}
-                {formatDate((pkg as any)?.createdAt)}
+                {formatDate((pkg as any)?.createdAt, i18n.language)}
               </div>
             </div>
             <div className="rounded-full bg-accent-2/10 px-4 py-2 font-semibold text-accent-2">{priceStr}</div>
@@ -187,7 +241,11 @@ const PackageDetailPage: React.FC = () => {
                       {m.type === 'video' ? (
                         <VideoThumb src={m.url} className="h-full w-full object-cover" />
                       ) : (
-                        <img src={m.url} alt={`${title} media ${i + 1}`} className="h-full w-full object-cover" />
+                        <img
+                          src={m.url}
+                          alt={`${localizedTitle} media ${i + 1}`}
+                          className="h-full w-full object-cover"
+                        />
                       )}
                     </div>
                   </button>
@@ -215,6 +273,7 @@ const PackageDetailPage: React.FC = () => {
           </div>
         </div>
       </section>
+
       <Footer isNotHome />
 
       {/* Fullscreen Modal */}
@@ -227,7 +286,7 @@ const PackageDetailPage: React.FC = () => {
         >
           <button
             onClick={onCloseModal}
-            className="absolute right-4 top-4  h-10 w-10 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+            className="absolute right-4 top-4 h-10 w-10 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
             aria-label={t('close')}
           >
             <span className="material-icons">close</span>

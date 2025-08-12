@@ -9,6 +9,8 @@ import DOMPurify from 'isomorphic-dompurify';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
+import { NextSeo, BreadcrumbJsonLd } from 'next-seo';
+import Head from 'next/head';
 
 const Header = dynamic(() => import('components/Header'), { ssr: false });
 const Footer = dynamic(() => import('sections/Footer'), { ssr: false });
@@ -83,8 +85,82 @@ const PackagesPage: React.FC = () => {
     }, 0);
   };
 
+  const baseUrl = 'https://oasis-tour.uz';
+  const pageUrl = `${baseUrl}/packages${clampedPage > 1 ? `?page=${clampedPage}` : ''}`;
+
+  const jsonLd = useMemo(() => {
+    if (!items.length) return null;
+
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'Oasis Tour Sayohat Paketlari',
+      description:
+        'Oasis Tour tomonidan taklif etilgan barcha sayohat paketlari — ichki va tashqi turlar, maxsus takliflar.',
+      url: pageUrl,
+      numberOfItems: items.length,
+      itemListElement: items.map((pkg, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: pkg[t('name')],
+        description: pkg[t('text')],
+        url: `${baseUrl}/packages/${pkg.id}`,
+        image: pkg.media?.[0]?.url || undefined,
+        offers: pkg.price
+          ? {
+              '@type': 'Offer',
+              priceCurrency: 'USD',
+              price: pkg.price,
+              availability: 'https://schema.org/InStock',
+            }
+          : undefined,
+      })),
+    };
+  }, [items, t, pageUrl, baseUrl]);
+
   return (
     <>
+      <Head>
+        <title>Paketlar | Oasis Tour</title>
+        <meta
+          name="description"
+          content="Oasis Tour tomonidan taklif etilgan barcha sayohat paketlari — ichki va tashqi turlar, maxsus takliflar."
+        />
+        <meta property="og:title" content="Paketlar | Oasis Tour" />
+        <meta
+          property="og:description"
+          content="Oasis Tour tomonidan taklif etilgan barcha sayohat paketlari — ichki va tashqi turlar, maxsus takliflar."
+        />
+        <meta property="og:url" content="https://oasis-tour.uz/packages" />
+        <meta property="og:image" content="https://oasis-tour.uz/packages-banner.jpg" />
+        <link rel="canonical" href="https://oasis-tour.uz/packages" />
+        <link rel="alternate" hrefLang="uz" href="https://oasis-tour.uz/packages" />
+        <link rel="alternate" hrefLang="ru" href="https://oasis-tour.uz/ru/packages" />
+        {jsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />}
+      </Head>
+      <NextSeo
+        title={t('packages')}
+        description={t('packages_subtitle')}
+        canonical={pageUrl}
+        openGraph={{
+          url: pageUrl,
+          title: t('packages'),
+          description: t('packages_subtitle'),
+        }}
+      />
+      <BreadcrumbJsonLd
+        itemListElements={[
+          { position: 1, name: 'Home', item: `${baseUrl}/` },
+          { position: 2, name: 'Packages', item: `${baseUrl}/packages` },
+        ]}
+      />
+      <Head>
+        {clampedPage > 1 && (
+          <link rel="prev" href={`/packages${clampedPage - 1 > 1 ? `?page=${clampedPage - 1}` : ''}`} />
+        )}
+        {clampedPage < totalPages && <link rel="next" href={`/packages?page=${clampedPage + 1}`} />}
+      </Head>
+
       <div className="w-full py-6 lg:z-10 lg:py-12">
         <Header />
       </div>
@@ -169,12 +245,13 @@ const PackageCard: React.FC<{
     [pkg, textKey, toSafeHtml],
   );
   const { t } = useTranslation('common');
-  const title = pkg[nameKey as keyof TravelPackage] as string;
+  const router = useRouter();
+  const title = (pkg[nameKey as keyof TravelPackage] as string) || pkg[t('name')];
   const firstMedia = pkg.media && pkg.media.length > 0 ? pkg.media[0] : null;
 
   return (
-    <Link href={`/packages/${pkg.id}`}>
-      <div className="group block cursor-pointer overflow-hidden rounded-3xl bg-white shadow-great transition hover:-translate-y-1 hover:shadow-2xl">
+    <Link href={`/packages/${pkg.id}`} className="group block">
+      <div className="overflow-hidden rounded-3xl bg-white shadow-great transition hover:-translate-y-1 hover:shadow-2xl">
         {firstMedia && (
           <div className="aspect-[4/3] w-full overflow-hidden">
             {firstMedia.type === 'video' ? (
@@ -183,6 +260,7 @@ const PackageCard: React.FC<{
               <img
                 src={firstMedia.url}
                 alt={title}
+                loading="lazy"
                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
             )}
@@ -196,11 +274,13 @@ const PackageCard: React.FC<{
             className="prose prose-p:my-2 prose-ul:my-2 prose-ol:my-2 max-w-none text-gray-700 line-clamp-3"
             dangerouslySetInnerHTML={{ __html: html }}
           />
-        </div>
-        <div className="mt-5 mb-8 flex justify-center">
-          <span className="inline-block rounded-xl bg-accent-1 px-4 py-2 text-center text-sm font-semibold text-white shadow-md transition hover:bg-accent-2">
-            {t('see_details')}
-          </span>
+          <button onClick={() => router.push(`/packages/${pkg?.id}`)} className="text-accent-1 hover:underline">
+            <div className="mt-5 flex justify-center">
+              <span className="inline-block cursor-pointer rounded-xl bg-accent-1 px-4 py-2 text-center text-sm font-semibold text-white shadow-md transition hover:bg-accent-2">
+                {t('see_details')}
+              </span>
+            </div>
+          </button>
         </div>
       </div>
     </Link>
