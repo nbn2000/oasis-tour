@@ -1,20 +1,21 @@
 'use client';
-import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Keyboard } from 'swiper';
+import React, { useMemo, useState } from 'react';
+import { Keyboard, Navigation, Pagination } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
-import { listPackages } from '../../lib/packages';
-import type { TravelPackage } from '../../types';
+import BookingModal from 'components/BookingModal';
 import DOMPurify from 'isomorphic-dompurify';
-import VideoThumb from '../../components/VideoThumb';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { BreadcrumbJsonLd, NextSeo, ProductJsonLd } from 'next-seo';
 import dynamic from 'next/dynamic';
-import { NextSeo, BreadcrumbJsonLd, ProductJsonLd } from 'next-seo';
+import VideoThumb from '../../components/VideoThumb';
+import { listPackages } from '../../lib/packages';
+import type { TravelPackage } from '../../types';
 
 const Header = dynamic(() => import('components/Header'), { ssr: false });
 const Footer = dynamic(() => import('sections/Footer'), { ssr: false });
@@ -79,6 +80,7 @@ const PackageDetailPage: React.FC<{ pkg: TravelPackage | null }> = ({ pkg }) => 
 
   const [openModal, setOpenModal] = useState(false);
   const [modalIndex, setModalIndex] = useState(0);
+  const [bookingOpen, setBookingOpen] = useState(false);
 
   const localizedTitle = (
     (pkg?.[t('name') as keyof TravelPackage] as string) ||
@@ -261,7 +263,14 @@ const PackageDetailPage: React.FC<{ pkg: TravelPackage | null }> = ({ pkg }) => 
             className="prose prose-p:my-2 prose-ul:my-2 prose-ol:my-2 max-w-none text-gray-800"
             dangerouslySetInnerHTML={{ __html: html }}
           />
-
+          <div className="mt-6 flex flex-col gap-4">
+            <button
+              onClick={() => setBookingOpen(true)}
+              className="mt-6 rounded-xl bg-accent-1 px-6 py-3 font-semibold text-white shadow hover:bg-accent-2"
+            >
+              {t('book_now')}
+            </button>
+          </div>
           {/* Back CTA */}
           <div className="mt-10">
             <Link href="/packages">
@@ -273,7 +282,7 @@ const PackageDetailPage: React.FC<{ pkg: TravelPackage | null }> = ({ pkg }) => 
           </div>
         </div>
       </section>
-
+      <BookingModal open={bookingOpen} onClose={() => setBookingOpen(false)} packageName={localizedTitle} />
       <Footer isNotHome />
 
       {/* Fullscreen Modal */}

@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+'use client';
 import DecorEllipse1 from 'assets/images/decor-ellipse-style-1.svg';
 import DecorPlus1 from 'assets/images/decor-plus-style-1.svg';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+const BOT_TOKEN = process.env.NEXT_PUBLIC_FORM_TELEGRAM_BOT_TOKEN!;
+const CHAT_ID = process.env.NEXT_PUBLIC_FORM_TELEGRAM_CHAT_ID!;
 
 const ContactSection = () => {
   const { t } = useTranslation('common');
@@ -15,7 +19,7 @@ const ContactSection = () => {
     setErrors((prev) => ({ ...prev, [e.target.name]: '' }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const errs: { [k: string]: string } = {};
     if (!fields.name.trim()) errs.name = t('contact_required');
@@ -25,10 +29,32 @@ const ContactSection = () => {
 
     if (Object.keys(errs).length === 0) {
       setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
+
+      try {
+        const text = `
+📩 New Contact Form Submission:
+👤 Name: ${fields.name}
+📞 Phone: ${fields.phone}
+💬 Message: ${fields.message}
+        `;
+
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text,
+            parse_mode: 'HTML',
+          }),
+        });
+
         setSubmitted(true);
-      }, 1500);
+      } catch (err) {
+        console.error('Telegram send error:', err);
+        alert('Failed to send message. Try again.');
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -163,7 +189,7 @@ const ContactSection = () => {
               >
                 <path
                   fill="currentColor"
-                  d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm5.293 7.293a1 1 0 0 1 0 1.414l-6 6a1 1 0 0 1-1.414 0l-3-3a1 1 0 0 1 1.414-1.414L11 13.586l5.293-5.293a1 1 0 0 1 1.414 0z"
+                  d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm5.293 7.293a1 1 0 0 1 0 1.414l-6 6a1 1 0 0 1-1.414 0l-3-3a1 1 0 0 1 1.414-1.414L11 13.586l5.293-5.293a1 1 0 1 1 1.414 0z"
                 />
               </svg>
               <div className="mb-4 text-center text-lg font-semibold text-gray-700">{t('contact_thanks')}</div>

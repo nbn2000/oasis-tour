@@ -155,5 +155,14 @@
   "back_to_packages": "Все пакеты",
   "created_at": "Создан",
   "open_media": "Открыть медиафайл",
-  "close": "Закрыть"
+  "close": "Закрыть",
+
+  "book_now": "Забронировать сейчас",
+  "book_package": "Бронирование тура",
+  "booking_contact_soon": "Мы свяжемся с вами в ближайшее время",
+  "contact_message_laceholder": "Сообщение (необязательно)",
+  "contact_sending": "Отправка...",
+  "contact_date": "Дата поездки",
+  "number_of_people": "Количество человек",
+  "contact_error": "Произошла ошибка. Пожалуйста, попробуйте снова."
 }

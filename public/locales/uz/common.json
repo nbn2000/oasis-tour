@@ -156,5 +156,14 @@
   "back_to_packages": "Barcha paketlar",
   "created_at": "Yaratilgan",
   "open_media": "Mediya faylini ochish",
-  "close": "Yopish"
+  "close": "Yopish",
+
+  "book_now": "Hozir buyurtma qilish",
+
+  "book_package": "Paketni bron qilish",
+  "contact_date": "Safar sanasi",
+  "number_of_people": "Odamlar soni",
+  "contact_sending": "Yuborilmoqda...",
+  "contact_error": "Xatolik yuz berdi. Iltimos, qayta urinib ko‘ring.",
+  "booking_contact_soon": "Tez orada siz bilan bog‘lanamiz."
 }
